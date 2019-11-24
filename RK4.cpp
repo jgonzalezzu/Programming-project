@@ -1,13 +1,19 @@
 /*
 Using RK4 for solving the differential equation for concentration on CO2 in the atmosphere
- */
+
+  // REPRODUCIR GRAFICAS
+  // QUE METODO ES MEJOR(COMPARAR CONCENTRACIONES INICIALES Y FINALES)
+  // CUANDO LA CONCENTRACION DE CO2 ES MAXIMA?
+
+*/
 
 #include <iostream>
 #include <vector>
 #include <cstdlib>
 #include <fstream>
+#include <cmath>
 
-const double W = 2.98768765;
+//const double W = 2.98768765;
 
 double function_f(); // function of emition of CO2 in to the atmosphere
 double d_p();
@@ -16,12 +22,9 @@ double d_Sd();
 double d_As();
 double d_Ad();
 
-
 double f(double t, const std::vector<double> &y, int id);
 void rk4 (double ta, double tb, double h, std::vector<double> & y);
-std::ofstream fout ("emissions.txt");
-//std::ofstream fout ("concentration.txt");
-
+std::ofstream fout ("dato.txt");
 
 int main (void)
 {
@@ -47,6 +50,14 @@ int main (void)
   double As = 2.2; //As equals to alpha sub s
   double Ad = 2.26;
   double t = 1000;   //calculating year
+
+  // DATA STRUCTURE //
+
+  std::vector<double> c{2.0, 10.5, 2.7}
+  std::vector<double> t{1988, 2100, 2265}
+  std::vector<double> s{21, 96, 57}
+  
+  // OPERATING DATA //
   const double N = 2; //
   const double TA = 1000; //initial point //modify for user input for assigned year
   const double TB = 5000; // End point
