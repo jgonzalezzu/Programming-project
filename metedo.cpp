@@ -10,8 +10,7 @@ const double W = 2.98768765;
 void euler (double ta, double tb, double h, std::vector<double> &y);
 double f(double t, const std::vector<double> &y, int id);
 void rk4 (double ta, double tb, double h, std::vector<double> & y);
-std::ofstream fout ("emissions.txt");
-std::ofstream fout ("concentration.txt");
+std::ofstream fout ("datos.txt");
 
 
 int main (void)
