@@ -13,9 +13,10 @@ Using RK4 for solving the differential equation for concentration on CO2 in the 
 #include <fstream>
 #include <cmath>
 
-//const double W = 2.98768765;
-
-double function_f(); // function of emition of CO2 in to the atmosphere
+double function_f(std::vector<double> &c, std::vector<double> &t, std::vector<double> &s, double t); // function of emition of CO2 in to the atmosphere
+double h_s(double Ss);
+double c_s(double & h_s);
+double p_s(double & h_s, double % c_s);
 double d_p();
 double d_Ss();
 double d_Sd();
@@ -30,16 +31,7 @@ int main (void)
 {
   // NUMERICAL CONSTANTS //
   
-  const double d = 8.64;
-  const double u1 = 495.0;
-  const double u2 = 0.0495;
-  const double vs = 0.12;
-  const double vd = 1.23;
-  const double w = 0.001;
-  const double k1 = 0.00219;
-  const double k2 = 0.0000612;
-  const double k3 = 0.997148;
-  const double k4 = 0.0679;
+  const double d = 8.64 , u1 = 495.0 , u2 = 0.049 , vs = 0.12 , vd = 1.23 , w = 0.001 , k1 = 0.00219 , k2 = 0.0000612 , k3 = 0.997148 , k4 = 0.0679;
   
   // INICIAL CONDITIONS //
 
@@ -68,8 +60,6 @@ int main (void)
 
   return 0;
 }
-
-
 
 void rk4 (double ta, double tb, double h, std::vector<double> & y)
 {
@@ -138,3 +128,36 @@ double f(double t, const std::vector<double> &y, int id)
     exit(1);
   }
 }
+
+double function_f(std::vector<double> &c, std::vector<double> &t, std::vector<double> &s, double t)
+{
+  double suma = 0
+  
+  for(int ii=0; ii<3; ++ii)
+  {
+    suma+= c[ii]*std::exp((-(T-t[ii])*(T-t[ii]))/(s[ii]*s[ii]));
+  }
+  std::cout<<suma<<std::endl;
+}
+
+double p_s(double & h_s, double % c_s)
+{
+  double p_s = 0.0;
+  p_s = k4 * ((h_s*h_s)/c_s);
+  return p_s;
+}
+
+double c_s(double & h_s)
+{
+  double c_s = 0.0;
+  c_s = (As-h_s)/2;
+  return c_s;
+}
+
+double h_s(double Ss)
+{
+  double h_s = 0.0;
+  h_s = (Ss-std::sqrt(Ss*Ss-k3*As*(2*Ss-As))/k3;
+  return h_s;
+}
+  
