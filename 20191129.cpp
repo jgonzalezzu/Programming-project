@@ -54,7 +54,7 @@ int main (void)
   const double TA = 1000; //initial point //modify for user input for assigned year
   const double TB = 5000; // End point
   const double H = 0.01; //step
-  std::vector<double> y = {1.0, 2.01, 2,23, 2.2, 2,26}; //x0, y0
+  std::vector<double> y = {1.0, 2.01, 2,23, 2.2, 2,26}; //y0=p, y1=Ss, y2=Sd, y3=As, y4=Ad --> initial values
 
 
   // LLAMAR A P_S RAROOO
@@ -121,31 +121,42 @@ void rk4 (double ta, double tb, double h, std::vector<double> & y, fptr p_s)
     std::cout << t << "\t" << y[0] << "\t" << y[1] << "\t"<< y[2]<< "\t" <<y[3] <<  "\t" <<y[4] <<   std::endl;
   }
 }
-//FUNCIONES DENTRO DEL ROUGE KUTTA
+
+//FUNCIONES DENTRO DEL ROUGE KUTTA ***
 double f(double t, const std::vector<double> &y, double k1, double k2, double k3, double k4, double u1, double u2, fptr p_s)
+  
 {
-  
-  
-  if(0 == id){
-    
+  if(0 == id)
+    {    
     return (p_s(k4,k3,y)/d + function_f(c,t,s)/u1 ;
   }
-  else if (1 == id){
+  else if (1 == id)
+    {
     return (w*(Y[2]-y[1])-k1-u2*((rp_s-y[0])/d))/vd ; //Reevisar sintaxis, pero teóricamente diana está bien :v
   }
-   else if (2 == id){
+   else if (2 == id)
+     {
      return (k1-w*(Y[1]-y[2]))/vd ; //y[1]=sigma_d y[2]=sigma_s
   }
-   else if (3 == id){
+   else if (3 == id)
+     {
      return (w*(y[4]-y[3]-k2)/vs ; //y[4]= alpha_d , y[3]= alpha_s
   }
-   else if (4 == id){     return (k2-w*(y[4]-y[3])/vd;
+   else if (4 == id)
+     {
+     return (k2-w*(y[4]-y[3])/vd;
   }
   else{
     std::cerr << "ERROR!!!!! it does not exist -> " << id << std::endl;
     exit(1);
   }
 }
+     /*
+Resvisar sintax de oepracion condicional
+cierra funciones superiores
+parece que hay una función dentro de otra
+      */
+
 
 double function_f(std::vector<double> &c, std::vector<double> &t, std::vector<double> &s)
 {
@@ -158,9 +169,11 @@ double function_f(std::vector<double> &c, std::vector<double> &t, std::vector<do
   std::cout<<suma<<std::endl;
 }
 
+  
 
-	    double p_s(double k4, double k3, const sdt::vector <double> & y)
-      {
+
+ 
+	    double p_s(double k4, double k3, const sdt::vector <double> & y) {
 	double rp_s = 0.0;
 	double rc_s = 0.0;
 	double rh_s = 0.0;
