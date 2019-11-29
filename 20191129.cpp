@@ -12,22 +12,27 @@ Using RK4 for solving the differential equation for concentration on CO2 in the 
 #include <cstdlib>
 #include <fstream>
 #include <cmath>
-
-using  vec = double(std::vector<double>) ;
-using  dou = double(vec, std::vector <double>));
-using  raro = double(vec, dou, double));
+usigin fptr = double(double, double, std:: vector<double>)
+//using  vec = double( std::vector<double>) ;
+//using  dou = double(vec, std::vector <double>));
+//using  raro = double(vec, dou, double));
 
 
 double function_f(std::vector<double> &c, std::vector<double> &t, std::vector<double> &s); // function of emition of CO2 in to the atmosphere
-double h_s(const double & y );
-double c_s(double & h_s);
 double p_s(double & h_s, double & c_s);
 double f(double t, const std::vector<double> &y, int id);
 void rk4 (double ta, double tb, double h, std::vector<double> & y);
 std::ofstream fout ("dato.txt");
 
 
-// NUMERICAL CONSTANTS //
+
+
+
+//INT MAIIIIIMMMM//
+int main (void)
+{
+
+  // NUMERICAL CONSTANTS //
   
   const double d = 8.64 , u1 = 495.0 , u2 = 0.049 , vs = 0.12 , vd = 1.23 , w = 0.001 , k1 = 0.00219 , k2 = 0.0000612 , k3 = 0.997148 , k4 = 0.0679;
   
@@ -49,12 +54,7 @@ std::ofstream fout ("dato.txt");
   const double TA = 1000; //initial point //modify for user input for assigned year
   const double TB = 5000; // End point
   const double H = 0.01; //step
-  std::vector<double> y = {0.12, 0}; //x0, y0
-
-
-//INT MAIIIIIMMMM//
-int main (void)
-{
+  std::vector<double> y = {1.0, 2.01, 2,23, 2.2, 2,26}; //x0, y0
 
 
   // LLAMAR A P_S RAROOO
@@ -68,7 +68,7 @@ int main (void)
 
 
 
-void rk4 (double ta, double tb, double h, std::vector<double> & y, raro ps)
+void rk4 (double ta, double tb, double h, std::vector<double> & y, fptr p_s)
 {
   std::vector<double>  k1, k2, k3, k4, aux;
   k1.resize(y.size());
@@ -122,25 +122,24 @@ void rk4 (double ta, double tb, double h, std::vector<double> & y, raro ps)
   }
 }
 //FUNCIONES DENTRO DEL ROUGE KUTTA
-double f(double t, const std::vector<double> &y, raro ps, vec hs, dou cs)
+double f(double t, const std::vector<double> &y, double k1, double k2, double k3, double k4, double u1, double u2, fptr p_s)
 {
-  double PS=ps(hs(y),cs(hs(y),y),k4)-y[0]);
+  
   
   if(0 == id){
     
-    return (PS/d + function_f(c,t,s)/u1 ;
+    return (p_s(k4,k3,y)/d + function_f(c,t,s)/u1 ;
   }
   else if (1 == id){
-    return (w(Y[2 ;
+    return (w*(Y[2]-y[1])-k1-u2*((rp_s-y[0])/d))/vd ; //Reevisar sintaxis, pero teóricamente diana está bien :v
   }
-   else if (1 == id){
-    return ;
+   else if (2 == id){
+     return (k1-w*(Y[1]-y[2]))/vd ; //y[1]=sigma_d y[2]=sigma_s
   }
-   else if (1 == id){
-    return ;
+   else if (3 == id){
+     return (w*(y[4]-y[3]-k2)/vs ; //y[4]= alpha_d , y[3]= alpha_s
   }
-   else if (1 == id){
-    return ;
+   else if (4 == id){     return (k2-w*(y[4]-y[3])/vd;
   }
   else{
     std::cerr << "ERROR!!!!! it does not exist -> " << id << std::endl;
@@ -159,24 +158,20 @@ double function_f(std::vector<double> &c, std::vector<double> &t, std::vector<do
   std::cout<<suma<<std::endl;
 }
 
-double p_s(vec h_s, dou  c_s, double k4)
-{
-  double rp_s = 0.0;
-  rp_s = k4 * ((h_s(y)*h_s(y))/c_s(h_s ,y));
-  return rp_s;
+
+	    double p_s(double k4, double k3, const sdt::vector <double> & y)
+      {
+	double rp_s = 0.0;
+	double rc_s = 0.0;
+	double rh_s = 0.0;
+	
+	rh_s = (y[1]-std::sqrt(y[1]*y[1]-k3*y[3]*(2*y[1]-y[3]))/k3;     
+		
+	rc_s = (y[3]-rh_s/2;
+			
+	rp_s = k4 * ((rh_s*rh_s)/c_s);
+			return rp_s;		
 }
 
- double c_s(vec h_s, const sdt::vector <double> & y)
-{
-  double rc_s = 0.0;
-  rc_s = (y[3]-h_s(y)/2;
-  return rc_s;
-}
-
-    double h_s(const sdt::vector <double> & y )
-{
-  double rh_s = 0.0;
-  rh_s = (y[1]-std::sqrt(y[1]*y[1]-k3*y[3]*(2*y[1]-y[3]))/k3;
-  return rh_s;
-}
+  
   
