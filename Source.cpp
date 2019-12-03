@@ -12,6 +12,7 @@ Using RK4 for solving the differential equation for concentration on CO2 in the 
 #include<iostream>
 #include<vector>
 #include<fstream>
+#include<cmath>
 //#include"constants.h"
 
 //------GLOBAL CONSTANTS-----//
@@ -37,10 +38,14 @@ std::vector<double> s{ 21, 96, 57 };
 //------DECLARATION OF ADITIONAL FUNCTIONS-----//
 
 double function_f(double T);
-double funciton_ps(std::vector<double>& y);
+double function_ps(std::vector<double>& y);
 void f_int(double T, std::vector<double>& y, double id);
 double f(double T, std::vector<double>& y, double id);
 void RK4(double TA, double TB, double H, std::vector<double>& y);
+
+//------PRINT TO FILE-----//
+
+std::ofstream fout ("datos.txt");
 
 //------DECLARATION OF ADITIONAL  %% TESTING %% FUNCTIONS-----//
 
@@ -272,12 +277,16 @@ int main(void)
 
 	//------PRESITION FOR CALULATIONS CODE-----//
 
-	std::cout.precision(5); std::cout.setf(std::ios::scientific);
+	//	std::cout.precision(5); std::cout.setf(std::ios::scientific);
+	fout.precision(5); fout.setf(std::ios::scientific);
 	
 	//------MAIN CODE-----//
 
 	rk4(TA, TB, H, y);
 
+	fout.close();
+
 	return 0;
+	
 	std::cin.get();
 }
