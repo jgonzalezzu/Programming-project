@@ -14,6 +14,7 @@ Using RK4 for solving the differential equation for concentration on CO2 in the 
 #include<fstream>
 #include<cmath>
 //#include"constants.h"
+std::ofstream fout("datos.txt"); //Print to file ://"data.txt"
 
 //------GLOBAL CONSTANTS-----//
 
@@ -23,7 +24,7 @@ const double u2 = 0.049;
 const double vs = 0.12;
 const double vd = 1.23;
 const double w = 0.001;
-const double k1 = 0.00219;
+const double k1 = 0.000219;
 const double k2 = 0.0000612;
 const double k3 = 0.997148;
 const double k4 = 0.0679;
@@ -38,28 +39,9 @@ std::vector<double> s{ 21, 96, 57 };
 //------DECLARATION OF ADITIONAL FUNCTIONS-----//
 
 double function_f(double T);
-double function_ps(std::vector<double>& y);
-void f_int(double T, std::vector<double>& y, double id);
+double funciton_ps(std::vector<double>& y);
 double f(double T, std::vector<double>& y, double id);
 void RK4(double TA, double TB, double H, std::vector<double>& y);
-
-//------PRINT TO FILE-----//
-
-std::ofstream fout ("datos.txt");
-
-//------DECLARATION OF ADITIONAL  %% TESTING %% FUNCTIONS-----//
-
-void print_vector(std::vector<double>& y); //		--> for testing purpose, its not necesary
-void print_function_f(double T);
-
-void print_vector(std::vector<double>& y)
-{
-	for (int id = 0; id < y.size(); ++id)
-	{
-		std::cout << y[id] << "\t";
-	}
-	std::cout << "\n";
-}
 
 double function_f(double T)
 {
@@ -70,16 +52,6 @@ double function_f(double T)
 	}
 	return suma;
 
-}
-
-void print_function_f(double T)
-{
-	double suma = 0.0;
-	for (int id = 0; id < 3; id++)
-	{
-		suma += c[id] * std::exp((-(T - t[id]) * (T - t[id])) / (s[id] * s[id]));
-	}
-	std::cout << suma << std::endl; //Print the result of the sumatory function
 }
 
 double function_ps(std::vector<double>& y)
@@ -100,76 +72,32 @@ double f(double T, std::vector<double>& y, int id) //rk4 internal function
 	if (id == 0)
 	{
 		double id_0 = 0.0;
-		id_0 = ((function_ps(y) - y[0]) / d) + (function_f(T) / u1);
+		id_0 = ((function_ps(y) - y[0]) / d) + (function_f(T) / u1); //NO ESTÁ AFECTANDO A LA FUNCIÓN P(T)
 		return id_0;
 	}
 	else if (id == 1)
 	{
 		double id_1 = 0.0;
-		id_1 = (w * (y[2] - y[1]) - k1 - u2 * ((function_ps(y) - y[0]) / d)) / vd;
+		//id_1 = (w * (y[2] - y[1]) - k1 - u2 * ((function_ps(y) - y[0]) / d)) / vd;
 		return id_1;
 	}
 	else if (id == 2)
 	{
-		double id_2 = 0.0;
-		id_2 = (k1 - w * (y[1] - y[2])) / vd;
+		double id_2 = 1.0;
+		//id_2 = (k1 - w * (y[1] - y[2])) / vd;
 		return id_2;
 	}
 	else if (id == 3)
 	{
-		double id_3 = 0.0;
-		id_3 = (k1 - w * (y[4] - y[3])) / vd;
+		double id_3 = 1.0;
+		//id_3 = (k1 - w * (y[4] - y[3])) / vd;
 		return id_3;
 	}
 	else if (id == 4)
 	{
-		double id_4 = 0.0;
-		id_4 = (w * (y[4] - y[3] - k2)) / vs;
+		double id_4 = 1.0;
+		//id_4 = (w * (y[4] - y[3] - k2)) / vs;
 		return id_4;;
-	}
-	else
-	{
-		std::cerr << "ERROR!!!!! it does not exist -> " << id << std::endl;
-		exit(1);
-	}
-}
-
-void f_int(double T, std::vector<double>& y, int id) //rk4 internal function
-{
-	if (id == 0)
-	{
-		double id_0 = 0.0;
-		id_0 = ((function_ps(y) - y[0]) / d) + (function_f(T) / u1);
-		//return id_0;
-		std::cout << id_0 << std::endl;
-	}
-	else if (id == 1)
-	{
-		double id_1 = 0.0;
-		id_1 = (w * (y[2] - y[1]) - k1 - u2 * ((function_ps(y) - y[0]) / d)) / vd;
-		//return id_1;
-		std::cout << id_1 << std::endl;
-	}
-	else if (id == 2)
-	{
-		double id_2 = 0.0;
-		id_2 = (k1 - w * (y[1] - y[2])) / vd;
-		//return id_2;
-		std::cout << id_2 << std::endl;
-	}
-	else if (id == 3)
-	{
-		double id_3 = 0.0;
-		id_3 = (k1 - w * (y[4] - y[3])) / vd;
-		//return id_3;
-		std::cout << id_3 << std::endl;
-	}
-	else if (id == 4)
-	{
-		double id_4 = 0.0;
-		id_4 = (w * (y[4] - y[3] - k2)) / vs;
-		//return id_4;
-		std::cout << id_4 << std::endl;
 	}
 	else
 	{
@@ -190,42 +118,42 @@ void rk4(double TA, double TB, double H, std::vector<double>& y) //Thi RK4 is fo
 	const int N = (TB - TA) / H;
 	for (int id = 0; id < N; ++id) {
 		double t = TA + H * id;
-		for (int ii = 0; ii < y.size(); ii++) {
+		for (int ii = 0; ii < y.size(); ii++) {  //replace with for auto to avoid the lever 3 warnings
 			C1[ii] = H * f(t, y, ii); //una función interna
 		}
 
 		//C2 aux
-		for (int ii = 0; ii < y.size(); ++ii) {
+		for (int ii = 0; ii < y.size(); ii++) {
 			aux[ii] = y[ii] + C1[ii] / 2;
 		}
 
 		//C2
-		for (int ii = 0; ii < y.size(); ++ii) {
+		for (int ii = 0; ii < y.size(); ii++) {
 			C2[ii] = H * f(t + H / 2, aux, ii);
 		}
 
 		//C3 aux
-		for (int ii = 0; ii < y.size(); ++ii) {
+		for (int ii = 0; ii < y.size(); ii++) {
 			aux[ii] = y[ii] + C2[ii] / 2;
 		}
 
 		//C3
-		for (int ii = 0; ii < y.size(); ++ii) {
+		for (int ii = 0; ii < y.size(); ii++) {
 			C3[ii] = H * f(t + H / 2, aux, ii);
 		}
 
 		//C4 aux
-		for (int ii = 0; ii < y.size(); ++ii) {
+		for (int ii = 0; ii < y.size(); ii++) {
 			aux[ii] = y[ii] + C3[ii];
 		}
 
 		//C4
-		for (int ii = 0; ii < y.size(); ++ii) {
+		for (int ii = 0; ii < y.size(); ii++) {
 			C4[ii] = H * f(t + H, aux, ii);
 		}
 
 		//write new y
-		for (int ii = 0; ii < y.size(); ++ii) {
+		for (int ii = 0; ii < y.size(); ii++) { 
 			y[ii] = y[ii] + (C1[ii] + 2 * C2[ii] + 2 * C3[ii] + C4[ii]) / 6.0;
 		}
 		fout << t << "\t" << y[0] << "\t" << y[1] << "\t" << y[2] << /*"\t" << y[3] << "\t" << y[4] <<*/ std::endl;
@@ -277,16 +205,14 @@ int main(void)
 
 	//------PRESITION FOR CALULATIONS CODE-----//
 
-	//	std::cout.precision(5); std::cout.setf(std::ios::scientific);
-	fout.precision(5); fout.setf(std::ios::scientific);
+	fout.precision(5); fout.setf(std::ios::scientific); //changed fout to std::cout
 	
 	//------MAIN CODE-----//
 
 	rk4(TA, TB, H, y);
 
-	fout.close();
+	fout.close(); //close "data.txt" file
 
 	return 0;
-	
 	std::cin.get();
 }
