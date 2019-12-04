@@ -7,13 +7,12 @@ Using RK4 for solving the differential equation for concentration on CO2 in the 
 
 */
 
-//------DECLARATION OF INCLUDED LIBRARIES-----//
+//-----LIBRARIES-----//
 
 #include<iostream>
 #include<vector>
 #include<fstream>
 #include<cmath>
-std::ofstream fout("datos.txt"); //Print to file ://"data.txt"
 
 //------GLOBAL CONSTANTS-----//
 
@@ -28,137 +27,18 @@ const double k2 = 0.0000612;
 const double k3 = 0.997148;
 const double k4 = 0.0679;
 
-//------DATA STRUCTURE FOR f(t)-----//
+//------DATA VECTORS FOR f(t)-----//
 
 std::vector<double> c{ 2.0, 10.5, 2.7 };
 std::vector<double> t{ 1988, 2100, 2265 };
 std::vector<double> s{ 21, 96, 57 };
 
-
 //------DECLARATION OF ADITIONAL FUNCTIONS-----//
 
-double function_f(double T);
-double funciton_ps(std::vector<double>& y);
-double f(double T, std::vector<double>& y, double id);
+double function_f(double T);  //Emission of CO_2 between years 1000 and 5000
+double function_ps(std::vector<double>& y); // Shallow-ocean equilibrium equatios
+double f(double T, std::vector<double>& y, int id); //internal function for RK4 (derivates)
 void RK4(double TA, double TB, double H, std::vector<double>& y);
-
-double function_f(double T)
-{
-	double suma = 0.0;
-	for (int id = 0; id < 3; id++)
-	{
-		suma += c[id] * std::exp((-(T - t[id]) * (T - t[id])) / (s[id] * s[id]));
-	}
-	return suma;
-
-}
-
-double function_ps(std::vector<double>& y)
-{
-	const double k3 = 0.997148;
-	const double k4 = 0.0679;
-	double hs = 0.0;
-	double cs = 0.0;
-	double ps = 0.0;
-	hs = (y[1] - std::sqrt(y[1] * y[1] - k3 * y[3] * (2 * y[1] - y[3]))) / k3;
-	cs = (y[3] - hs) / 2;
-	ps = (k4 * hs * hs) / cs;
-	return ps;
-}
-
-double f(double T, std::vector<double>& y, int id) //rk4 internal function
-{
-	if (id == 0)
-	{
-		double id_0 = 0.0;
-		id_0 = ((function_ps(y) - y[0]) / d) + (function_f(T) / u1); //NO ESTÁ AFECTANDO A LA FUNCIÓN P(T)
-		return id_0;
-	}
-	else if (id == 1)
-	{
-		double id_1 = 0.0;
-		id_1 = ((w * (y[2] - y[1]) - k1 - u2 *(function_ps(y) - y[0]) / d)) / vd;
-		return id_1;
-	}
-	else if (id == 2)
-	{
-		double id_2 = 1.0;
-		id_2 = (k1 - w * (y[1] - y[2])) / vd;
-		return id_2;
-	}
-	else if (id == 3)
-	{
-		double id_3 = 1.0;
-		id_3 = (k1 - w * (y[4] - y[3])) / vd;
-		return id_3;
-	}
-	else if (id == 4)
-	{
-		double id_4 = 1.0;
-		//id_4 = (w * (y[4] - y[3] - k2)) / vs;
-		return id_4;;
-	}
-	else
-	{
-		std::cerr << "ERROR!!!!! it does not exist -> " << id << std::endl;
-		exit(1);
-	}
-}
-
-void rk4(double TA, double TB, double H, std::vector<double>& y) //Thi RK4 is for all points on the curve
-{
-	std::vector<double>  C1, C2, C3, C4, aux;
-	C1.resize(y.size());
-	C2.resize(y.size());
-	C3.resize(y.size());
-	C4.resize(y.size());
-	aux.resize(y.size());
-
-	const int N = (TB - TA) / H;
-	for (int id = 0; id < N; ++id) {
-		double t = TA + H * id;
-		for (int ii = 0; ii < y.size(); ii++) {  //replace with for auto to avoid the lever 3 warnings
-			C1[ii] = H * f(t, y, ii); //una función interna
-		}
-
-		//C2 aux
-		for (int ii = 0; ii < y.size(); ii++) {
-			aux[ii] = y[ii] + C1[ii] / 2;
-		}
-
-		//C2
-		for (int ii = 0; ii < y.size(); ii++) {
-			C2[ii] = H * f(t + H / 2, aux, ii);
-		}
-
-		//C3 aux
-		for (int ii = 0; ii < y.size(); ii++) {
-			aux[ii] = y[ii] + C2[ii] / 2;
-		}
-
-		//C3
-		for (int ii = 0; ii < y.size(); ii++) {
-			C3[ii] = H * f(t + H / 2, aux, ii);
-		}
-
-		//C4 aux
-		for (int ii = 0; ii < y.size(); ii++) {
-			aux[ii] = y[ii] + C3[ii];
-		}
-
-		//C4
-		for (int ii = 0; ii < y.size(); ii++) {
-			C4[ii] = H * f(t + H, aux, ii);
-		}
-
-		//write new y
-		for (int ii = 0; ii < y.size(); ii++) { 
-			y[ii] = y[ii] + (C1[ii] + 2 * C2[ii] + 2 * C3[ii] + C4[ii]) / 6.0;
-		}
-		fout << t << "\t" << y[0] << "\t" << y[1] << "\t" << y[2] << /*"\t" << y[3] << "\t" << y[4] <<*/ std::endl;
-		//replaced fout for std::cout
-	}
-}
 
 int main(void)
 {
@@ -183,11 +63,10 @@ int main(void)
 
 	//------OPERATING DATA-----//
 
-	const double N = 2;
 	const double TA = 1000;
 	const double TB = 5000;
 	const double H = 1;
-	std::vector<double> y = { p, Ss, Sd, As, Ad };
+	std::vector<double> y = { p, Ss, Sd, As, Ad };  //make y vector constant 
 
 	/*
 	For nomenclature we are taking:
@@ -201,17 +80,113 @@ int main(void)
 	- y[3] --> As
 	- y[4] --> Ad
 	*/
+	std::cout.precision(5); std::cout.setf(std::ios::scientific);
 
-	//------PRESITION FOR CALULATIONS CODE-----//
+	RK4(TA, TB, H, y);
+}
 
-	fout.precision(5); fout.setf(std::ios::scientific); //changed fout to std::cout
-	
-	//------MAIN CODE-----//
+double function_f(double T) //T is the dynamic parameter (changes in time)
+{
+	double suma = 0.0;
+	for (int id = 0; id < 3; id++)
+	{
+		suma += c[id] * std::exp((-(T - t[id]) * (T - t[id])) / (s[id] * s[id]));
+	}
+	return suma;
+}
+double function_ps(std::vector<double>& y)
+{
+	double hs = (y[1] - std::sqrt(y[1] * y[1] - k3 * y[3] * (2 * y[1] - y[3]))) / k3;
+	double cs = (y[3] - hs) / 2;
+	return (k4 * hs * hs) / cs;
+}
+double f(double T, std::vector<double>& y, int id)
+{
+	if (id == 0)
+	{
+		return ((function_ps(y) - y[0]) / d) + (function_f(T) / u1);
+	}
+	else if (id == 1)
+	{
+		return (w * (y[2] - y[1]) - k1 - u2 * ((function_ps(y) - y[0]) / d)) / vs;
+	}
+	else if (id == 2)
+	{
+		return (k1 - w * (y[1] - y[2])) / vd;
+	}
+	else if (id == 3)
+	{
+		return (k1 - w * (y[4] - y[3])) / vd;
+	}
+	else if (id == 4)
+	{
+		return (w * (y[4] - y[3]) - k2) / vs;
+	}
+	else
+	{
+		std::cerr << "ERROR!!!!! it does not exist -> " << id << std::endl;
+		exit(1);
+	}
+}
+void RK4(double TA, double TB, double H, std::vector<double>& y)
+{
+	std::vector<double>  C1, C2, C3, C4, aux;
+	C1.resize(y.size());
+	C2.resize(y.size());
+	C3.resize(y.size());
+	C4.resize(y.size());
+	aux.resize(y.size());
 
-	rk4(TA, TB, H, y);
+	const int N = (TB - TA) / H;
+	for (int id = 0; id < N; id++) {
+		double T = TA + (H * id);
+		for (int ii = 0; ii < y.size(); ii++)
+		{
+			C1[ii] = H * f(T, y, ii); //una función interna
+		}
 
-	fout.close(); //close "data.txt" file
+		//C2 aux
+		for (int ii = 0; ii < y.size(); ii++)
+		{
+			aux[ii] = y[ii] + C1[ii] / 2;
+		}
 
-	return 0;
-	std::cin.get();
+		//C2
+		for (int ii = 0; ii < y.size(); ii++)
+		{
+			C2[ii] = H * f(T + H / 2, aux, ii);
+		}
+
+		//C3 aux
+		for (int ii = 0; ii < y.size(); ii++)
+		{
+			aux[ii] = y[ii] + C2[ii] / 2;
+		}
+
+		//C3
+		for (int ii = 0; ii < y.size(); ii++)
+		{
+			C3[ii] = H * f(T + H / 2, aux, ii);
+		}
+
+		//C4 aux
+		for (int ii = 0; ii < y.size(); ii++)
+		{
+			aux[ii] = y[ii] + C3[ii];
+		}
+
+		//C4
+		for (int ii = 0; ii < y.size(); ii++)
+		{
+			C4[ii] = H * f(T + H, aux, ii);
+		}
+
+		//write new yy
+		for (int ii = 0; ii < y.size(); ii++)
+		{
+			y[ii] = y[ii] + (C1[ii] + 2 * C2[ii] + 2 * C3[ii] + C4[ii]) / 6.0;
+		}
+		std::cout << T << "\t" << y[0] << "\t" << y[1] << "\t" << y[2] << "\t" << y[3] << "\t" << y[4] << std::endl;
+		//replaced fout for std::cout
+	}
 }
