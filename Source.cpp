@@ -13,7 +13,6 @@ Using RK4 for solving the differential equation for concentration on CO2 in the 
 #include<vector>
 #include<fstream>
 #include<cmath>
-//#include"constants.h"
 std::ofstream fout("datos.txt"); //Print to file ://"data.txt"
 
 //------GLOBAL CONSTANTS-----//
@@ -78,19 +77,19 @@ double f(double T, std::vector<double>& y, int id) //rk4 internal function
 	else if (id == 1)
 	{
 		double id_1 = 0.0;
-		//id_1 = (w * (y[2] - y[1]) - k1 - u2 * ((function_ps(y) - y[0]) / d)) / vd;
+		id_1 = ((w * (y[2] - y[1]) - k1 - u2 *(function_ps(y) - y[0]) / d)) / vd;
 		return id_1;
 	}
 	else if (id == 2)
 	{
 		double id_2 = 1.0;
-		//id_2 = (k1 - w * (y[1] - y[2])) / vd;
+		id_2 = (k1 - w * (y[1] - y[2])) / vd;
 		return id_2;
 	}
 	else if (id == 3)
 	{
 		double id_3 = 1.0;
-		//id_3 = (k1 - w * (y[4] - y[3])) / vd;
+		id_3 = (k1 - w * (y[4] - y[3])) / vd;
 		return id_3;
 	}
 	else if (id == 4)
@@ -187,7 +186,7 @@ int main(void)
 	const double N = 2;
 	const double TA = 1000;
 	const double TB = 5000;
-	const double H = 100;
+	const double H = 1;
 	std::vector<double> y = { p, Ss, Sd, As, Ad };
 
 	/*

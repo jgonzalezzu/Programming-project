@@ -13,10 +13,12 @@ const double d=8.64, u1=495.0 , u2=0.0495, vs=0.12, vd=1.23, w=0.001, k1=0.00021
 
 int main(void)
 {
+
+  fout.precision(5); fout.setf(std::ios::scientific);
 	const int N=5;
 	double t0=1000;
 	double t1=5000;
-	double dt=100;
+	double dt=1;
 	std::vector<double> y(N);
 	y={1,2.01,2.23,2.20,2.26};
 	
