@@ -6,7 +6,7 @@ void rkta(double t0, double t1, double dt, std::vector<double> &y);
 double f(double t, const std::vector<double> &y, int i);
 double fuel(double t);
 double ps(const std::vector<double> &y);
-std::ofstream fout("intento.txt");
+std::ofstream fout("Datos.txt");
 
 //constants
 const double d=8.64, u1=495.0 , u2=0.0495, vs=0.12, vd=1.23, w=0.001, k1=0.000219, k2=0.0000612, k3=0.997148, k4 = 0.0679;
@@ -14,7 +14,7 @@ const double d=8.64, u1=495.0 , u2=0.0495, vs=0.12, vd=1.23, w=0.001, k1=0.00021
 int main(void)
 {
 	const int N=5;
-	double t0=1000;
+	double t0=1000.0;
 	double t1=5000;
 	double dt=1;
 	std::vector<double> y(N);
@@ -28,67 +28,68 @@ int main(void)
 void rkta(double t0, double t1, double dt, std::vector<double> &y)
 {
 	int N=(t1-t0)/dt;
+	double max=0;
+	double tmax=0;
 	double t=0;
-	std::vector<double> k1, k2, k3, k4, aux, kaux, suma;
+	std::vector<double> k1, k2, k3, k4, aux, kaux;
 	k1.resize(y.size());
 	k2.resize(y.size());
 	k3.resize(y.size());
 	k4.resize(y.size());
 	aux.resize(y.size());
 	kaux.resize(y.size());
-	suma.resize(y.size());
+
 	
-	//	fout<< t0 <<"\t";
-	//for(int i=0; i<y.size(); i++){
-	//		fout<< y[i] <<"\t";
-	//	}
-	//fout<<"\n";
+	fout<< t0 <<"\t";
+	for(int i=0; i<3; i++){
+	  fout<< y[i] <<"\t";
+	}
+	fout<<fuel(t0)<< "\n";
 	
 	for(int n=1; n<=N; n++){
-		t=t0+dt*n;
-		std::copy(y.begin(),y.end(),aux.begin());
-		for(int i=0; i<y.size(); i++){
-			//k1
-			k1[i]=dt*f(t,aux,i);
-			//k2
-			for(int j=0; j<y.size(); j++){
-				kaux[j]=aux[j]+k1[j]/2;
-			}
-			k2[i]=dt*f(t+dt/2,kaux,i);
-			//k3
-			for(int j=0; j<y.size(); j++){
-				kaux[j]=aux[j]+k2[j]/2;
-			}
-			k3[i]=dt*f(t+dt/2,kaux,i);
-			//k4
-			for(int j=0; j<y.size(); j++){
-				kaux[j]=aux[j]+k3[j];
-			}
-			k4[i]=dt*f(t+dt,kaux,i);
-			//t evolution
-			y[i]=y[i]+(k1[i]+2*k2[i]+2*k3[i]+k4[i])/6;
-
-			//emition evolution
-			for(int j=0; j < y.size(); j++)
-			  {
-			    suma[j]=fuel(t);
-			  }
-		}
-		fout<< t <<"\t";
-
-	        
-		for(int i=0; i<y.size(); i++){
-			fout<< y[i] <<"\t";
-			
-			if (i-2==0) {
-			  fout<< suma[i-2] << "\t";
-			}
-		}
-		
-		
-		fout<<"\n";
-	}
-	fout.close();
+	  t=t0+dt*n;
+	  std::copy(y.begin(),y.end(),aux.begin());
+	  for(int i=0; i<y.size(); i++){
+	    //k1
+	    k1[i]=dt*f(t,aux,i);
+	    //k2
+	    for(int j=0; j<y.size(); j++){
+	      kaux[j]=aux[j]+k1[j]/2;
+	    }
+	    k2[i]=dt*f(t+dt/2,kaux,i);
+	    //k3
+	    for(int j=0; j<y.size(); j++){
+	      kaux[j]=aux[j]+k2[j]/2;
+	    }
+	    k3[i]=dt*f(t+dt/2,kaux,i);
+	    //k4
+	    for(int j=0; j<y.size(); j++){
+	      kaux[j]=aux[j]+k3[j];
+	    }
+	    k4[i]=dt*f(t+dt,kaux,i);
+	    //t evolution
+	    y[i]=y[i]+(k1[i]+2*k2[i]+2*k3[i]+k4[i])/6;
+	    
+	  }
+	  if(y[0]-max > 1e-6){
+	    max=y[0];
+	    tmax=t;
+	  }
+	  
+	  
+	  
+	  //impresion de t,p, Ss,Sd,f(t)
+	  fout<< t <<"\t";
+	  
+	  
+	  for(int i=0; i<3; i++){
+	    fout<< y[i] <<"\t";
+	    
+	  }		
+	  fout<< fuel(t)<< "\n";	
+	}	
+	fout<< tmax << "\t"<< max << "\n";
+fout.close();
 }
 
 double f(double t, const std::vector<double> &y, int i)
