@@ -1,6 +1,6 @@
-1. For compilin use :$ g++ -std=c++11 constants.h Derivadas.cpp funcion_ps.cpp Sumatoria_f(t).cpp Source.cpp
+1. For compilin use all ".cpp" files and "constants.h"
 
-2. run via :$ ./a.out
+2. run
 
 2. For plotting the data, go to gnuplot and use:
 2.1 for concentration :$ load 'plot_concentration.p'
