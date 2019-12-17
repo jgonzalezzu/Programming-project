@@ -1,6 +1,6 @@
-1. Compile "SFF.cpp" in 'code/single_file' folder using:$ g++ -std=c++11 SSF.cpp
+1. Compile "SFF.cpp" in 'single_file' folder using:$ g++ -std=c++11 SSF.cpp
 
-[OPTIONAL] For compile modularized use all ".cpp" files and "constants.h" in folder modularized importing this files in nwe Visual Studio Solution. 
+[OPTIONAL] For compile modularized use all ".cpp" files and "constants.h" in 'modularized' folder  importing this files in new Visual Studio Solution.
 
 2. run
 
@@ -14,3 +14,30 @@
 Authors:
 Diana Milena Pinto Gonzalez
 jpintog@unal.edu.co
+Diego Nicolas Ordoñez Peña
+diordonezp@unal.edu.co
+Julian Estban Gonzalez Zúliga
+jegonzalezzu@unal.edu.co
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
