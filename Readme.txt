@@ -1,4 +1,6 @@
-1. For compilin use all ".cpp" files and "constants.h"
+1. Compile "SFF.cpp" in 'code/single_file' folder using:$ g++ -std=c++11 SSF.cpp
+
+[OPTIONAL] For compile modularized use all ".cpp" files and "constants.h" in folder modularized importing this files in nwe Visual Studio Solution. 
 
 2. run
 
@@ -8,3 +10,7 @@
 2.3 for max value :$ load 'plot_max'
 
 3. Enjoy!
+
+Authors:
+Diana Milena Pinto Gonzalez
+jpintog@unal.edu.co
